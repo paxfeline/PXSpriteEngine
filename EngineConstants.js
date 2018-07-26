@@ -7,7 +7,7 @@ const hboardX = boardX * .5;
 const hboardY = boardY * .5;
 
 // STICKY_THRESHOLD is set to .0004
-const STICKY_THRESHOLD = .0004;
+var STICKY_THRESHOLD = .0004;
 
 const GRAVITY_X = 0;
 const GRAVITY_Y = 1;

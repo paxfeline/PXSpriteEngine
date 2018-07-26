@@ -46,7 +46,7 @@ PAXColorSprite.prototype.draw =
 		ctx.fillStyle = this.color;
 		ctx.fillRect( 0, 0, this.width, this.height );
 		
-		console.log( this.subDraw );
+		//console.log( this.subDraw );
 		if ( this.subDraw ) this.subDraw( ctx, this );
 		
 		ctx.restore();

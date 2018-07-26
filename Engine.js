@@ -54,6 +54,16 @@ Engine.prototype = {
 				}
 			}
 			
+			// set collidables
+			
+			var d = (this.player.x + this.player.width) % levelXchunk;
+			var i = Math.floor( this.player.x  / levelXchunk );
+			if ( d >= 0 && d <= this.player.width && i + 1 < this.colBlocks.length )
+				this.collidables = [].concat( this.colBlocks[i], this.colBlocks[i+1] );
+			else
+				this.collidables = this.colBlocks[i];
+				
+			
 			// find hits
 			
 			var collisions = this.collider.detectCollisions(

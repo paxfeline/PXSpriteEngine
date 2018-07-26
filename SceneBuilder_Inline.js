@@ -1,6 +1,13 @@
+eng.colBlocks = [];
+
+var curColBlock;
+
 for ( var blocki = 0; blocki < level.length; blocki++ )
 {
     var lblock = level[ blocki ];
+    
+    curColBlock = [];
+    eng.colBlocks.push( curColBlock );
     
     for ( var line = 0; line < lblock.length; line++ )
     {
@@ -20,7 +27,7 @@ for ( var blocki = 0; blocki < level.length; blocki++ )
                 	var s = new PAXColorSprite( BOXSIZE, BOXSIZE, "green" );
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case '0':
@@ -30,7 +37,7 @@ for ( var blocki = 0; blocki < level.length; blocki++ )
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
                     plat.restitution = r;
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case '9':
@@ -40,7 +47,7 @@ for ( var blocki = 0; blocki < level.length; blocki++ )
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
                     plat.restitution = r;
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case 'S':
@@ -48,9 +55,10 @@ for ( var blocki = 0; blocki < level.length; blocki++ )
                 	var s = new PAXColorSprite( BOXSIZE, BOXSIZE, "darkgrey" );
                 	s.subDraw = breakBoxDraw;
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
-                    plat.yHit = function (d) { console.log( "hitS", this ); if ( d < 0 ) return true; };
+                    plat.yHit = function (d) { /*console.log( "hitS", this );*/ if ( d < 0 ) return true; };
+                    plat.restitution = 0; // no bounce
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case 'Z':
@@ -58,18 +66,19 @@ for ( var blocki = 0; blocki < level.length; blocki++ )
                 	var s = new PAXColorSprite( BOXSIZE, BOXSIZE, "darkgrey" );
                 	s.subDraw = specialBoxDraw;
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
-                    plat.yHit = function (d) { console.log( "hitS", this ); if ( d < 0 ) this.sprite.color = "blue"; };
+                    plat.yHit = function (d) { /*console.log( "hitZ", this );*/ if ( d < 0 ) this.sprite.color = "blue"; };
+                    plat.restitution = 0; // no bounce
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case '*':
                     
                     var s = new PAXColorSprite( BOXSIZE, BOXSIZE, "gold" );
                     var plat = new PhysicsEntity( PhysicsEntity.ESLASTIC, PhysicsEntity.KINEMATIC, x, y, s );
-                    plat.anyHit = function () { console.log( "hit", this ); eng.toRemove.push( this ); };
+                    plat.anyHit = function () { /*console.log( "hit", this );*/ eng.toRemove.push( this ); };
                     eng.entities.push( plat );
-                    eng.collidables.push( plat );
+                    curColBlock.push( plat );
                     
                     break;
                 case '#':

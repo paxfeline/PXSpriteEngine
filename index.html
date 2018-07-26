@@ -37,14 +37,17 @@ body
     margin: 0.1em;
 }
 
+/* while pressed the button's border style will change from outset to inset */
+
 .gameBtn:active
 {
     border-style: inset;
 }
 
+/* the canvas will fit to the screen */
+
 canvas
 {
-    /*display: inline-block;*/
     height: 100vmin;
     width: 100vmin;
     border: 1px solid black;
@@ -52,11 +55,6 @@ canvas
 
 </style>
 
-<script type="text/javascript" src="PXSprite.js"></script>
-<script type="text/javascript" src="PhysicsEntity.js"></script>
-<script type="text/javascript" src="CollisionDetector.js"></script>
-<script type="text/javascript" src="Resolver.js"></script>
-<script type="text/javascript" src="Engine.js"></script>
 <script type="text/javascript" src="EngineConstants.js"></script>
 
 <script type="text/javascript">
@@ -87,6 +85,14 @@ addEventListener( "keyup", keyUp );
 
 /**************/
 
+// this is fun: design your level via ASCII.
+// the meanings of these characters is determined in SceneBuilder_Inline.js (included below).
+
+// note: the "chunks" below are laid out horizontally, sequentially.
+// while the chunks can be whatever size you want, they should be a uniform size.
+
+// (the # character hasn't been defined yet, so it is ignored (like space))
+
 var level =
     [
         [
@@ -107,11 +113,11 @@ var level =
             " * * * * *",
             "          ",
             "          ",
-            "000       ",
+            "S00       ",
             "          ",
             "          ",
             "          ",
-            "##########"
+            "X#########"
         ],
         [
             "XXXXXXXXXX",
@@ -127,11 +133,19 @@ var level =
         ]
     ];
 
+// these variables are used elsewhere
 var levelblocksize = level[0][0].length;
-var levelX = level[0][0].length * level.length * BOXSIZE;
+var levelXchunk = levelblocksize * BOXSIZE;
+var levelX = level.length * levelXchunk;
 var levelY = level[0].length * BOXSIZE;
 
 </script>
+
+<script type="text/javascript" src="PXSprite.js"></script>
+<script type="text/javascript" src="PhysicsEntity.js"></script>
+<script type="text/javascript" src="CollisionDetector.js"></script>
+<script type="text/javascript" src="Resolver.js"></script>
+<script type="text/javascript" src="Engine.js"></script>
 
 </head>
 <body>
@@ -170,6 +184,9 @@ var eng = new Engine( collider, solveHit, solverY, solverX );
 
 setInterval( eng.step.bind( eng ), 50 );
 
+// this makes the buttons function
+// this is a bit messy: it fakes a 'key' event and calls the keyDown function
+
 var leftBtn = document.querySelector( "#leftBtn" );
 var leftDown = function ( e ) { e.key = "ArrowLeft"; keyDown( e ); };
 var leftUp = function ( e ) { e.key = "ArrowLeft"; keyUp( e ); };
@@ -196,6 +213,20 @@ jumpBtn.addEventListener( "touchend", jumpUp, false );
 jumpBtn.addEventListener( "touchcancel", jumpUp, false );
 jumpBtn.addEventListener( "mousedown", jumpDown, false );
 jumpBtn.addEventListener( "mouseup", jumpUp, false );
+
+// tapping or clicking the canvas will also jump
+
+jumpBtn = document.querySelector( "canvas" );
+jumpBtn.addEventListener( "touchstart", jumpDown, false );
+jumpBtn.addEventListener( "touchend", jumpUp, false );
+jumpBtn.addEventListener( "touchcancel", jumpUp, false );
+jumpBtn.addEventListener( "mousedown", jumpDown, false );
+jumpBtn.addEventListener( "mouseup", jumpUp, false );
+
+// also messy...
+// this presents an alert with the keyboard controls, if there is no touch screen
+// it determines this hackily by checking whether window.orientation exists
+// just due to weird behavior on my phone, I added the timeout
 
 if ( typeof window.orientation == 'undefined' )
     setTimeout( alert.bind( null, "Use the left and right arrow keys to move, spacebar to jump." ), 10 );
